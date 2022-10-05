@@ -3,7 +3,7 @@
 /*
  * API
  */
-const Node* BST::Insert(std::string_view _name,
+const Node* BST::Insert(const std::string& _name,
                         uint32_t _id)
 {
     return Insert(root,
@@ -15,7 +15,7 @@ const Node* BST::Insert(std::string_view _name,
  * Private utility functions
  */
 const Node* BST::Insert(Node* _node,
-                        std::string_view _name,
+                        const std::string& _name,
                         uint32_t _id)
 {
     if (_node == nullptr)
