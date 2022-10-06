@@ -36,6 +36,9 @@ private:
     Node* Insert(Node*& _node,
                   const std::string& _name,
                   uint32_t _id);
+
     Node* Search(Node*& _node,
                   uint32_t _id);
+    Node* Search(Node*& _node,
+                 const std::string& _name);
 };

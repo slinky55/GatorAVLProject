@@ -10,12 +10,18 @@ Node* AVL::Insert(const std::string& _name,
         return Insert(root,
                       _name,
                       _id);
+    return nullptr;
 }
 
 Node* AVL::Search(uint32_t _id)
 {
     return Search(root,
            _id);
+}
+Node* AVL::Search(const std::string& _name)
+{
+    return Search(root,
+                  _name);
 }
 
 /*
@@ -46,6 +52,7 @@ Node* AVL::Insert(Node*& _node,
                       _name,
                       _id);
     }
+    return nullptr;
 }
 
 Node* AVL::Search(Node*& _node,
@@ -62,4 +69,20 @@ Node* AVL::Search(Node*& _node,
     if (_id > _node->data.second)
         return Search(_node->right,
                       _id);
+    return nullptr;
+}
+Node* AVL::Search(Node*& _node,
+                  const std::string& _name)
+{
+
+    if (_node->left)
+        return Search(_node->left,
+                      _name);
+
+    if (_node->data.first == _name)
+        return _node;
+
+    if (_node->right)
+        return Search(_node->right,
+                      _name);
 }
