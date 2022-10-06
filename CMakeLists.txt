@@ -3,4 +3,4 @@ project(GatorAVLProject)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(GatorAVLProject main.cpp BST.cpp)
+add_executable(GatorAVLProject main.cpp AVL.cpp)

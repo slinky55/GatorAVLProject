@@ -1,13 +1,14 @@
 #include <iostream>
 
-#include "BST.h"
+#include "AVL.h"
 
 int main()
 {
-    BST tree;
+    AVL tree;
 
     tree.Insert("John Smith", 126498);
-    std::cout << tree.Root();
+    tree.Insert("Henry Jones", 125000);
+    tree.Insert("James Madison", 130000);
 
     return 0;
 }
