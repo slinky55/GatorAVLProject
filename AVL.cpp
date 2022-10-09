@@ -1,8 +1,11 @@
+/*
 #include "AVL.h"
 
+*/
 /*
  * API
- */
+ *//*
+
 Node* AVL::Insert(const std::string& _name,
                    uint32_t _id)
 {
@@ -30,9 +33,11 @@ Node* AVL::Search(const std::string& _name)
                   _name);
 }
 
+*/
 /*
  * Private utility functions
- */
+ *//*
+
 Node* AVL::Insert(Node*& _node,
                    const std::string& _name,
                    uint32_t _id)
@@ -40,25 +45,37 @@ Node* AVL::Insert(Node*& _node,
     // Base case
     if (_node == nullptr)
     {
-        _node = new Node;
-        _node->data = {_name, _id};
-        return _node;
+        _node = new Node
+        {
+                nullptr,
+                nullptr,
+                0,
+                {_name, _id}
+        };
     }
 
     if (_id < _node->data.second)
     {
-        return Insert(_node->left,
-                      _name,
-                      _id);
+        Insert(_node->left,
+               _name,
+               _id);
+        if(height(_node->left) - height(_node->right) == 2)
+        {
+            if(_node->data.second < _node->left->data.second)
+                t = singleRightRotate(t);
+            else
+                t = doubleRightRotate(t);
+        }
     }
 
     if (_id > _node->data.second)
     {
-        return Insert(_node->right,
-                      _name,
-                      _id);
+        Insert(_node->right,
+               _name,
+               _id);
     }
-    return nullptr;
+
+    return _node;
 }
 Node* AVL::Delete(Node*& _node,
                   uint32_t _id)
@@ -86,31 +103,30 @@ Node* AVL::Delete(Node*& _node,
     return _node;
 }
 Node* AVL::Search(Node*& _node,
-                  uint32_t _id) {
-
+                  uint32_t _id)
+{
     if (!_node)
-    {
         return nullptr;
-    }
+
     if (_id == _node->data.second)
-    {
         return _node;
-    }
+
     if (_id < _node->data.second)
         return Search(_node->left,
                       _id);
+
     if (_id > _node->data.second)
         return Search(_node->right,
                       _id);
+
     return nullptr;
 }
+
 Node* AVL::Search(Node*& _node,
                   const std::string& _name)
 {
     if (!_node)
-    {
         return nullptr;
-    }
     if (_node->data.first == _name)
         return _node;
     if (_node->left)
@@ -119,4 +135,6 @@ Node* AVL::Search(Node*& _node,
     if (_node->right)
         return Search(_node->right,
                       _name);
+    return nullptr;
 }
+*/

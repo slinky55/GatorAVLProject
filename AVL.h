@@ -9,13 +9,12 @@
 
 using DataPair = std::pair<std::string, uint32_t>;
 
-struct Node;
-using NodePtr = std::shared_ptr<Node>;
-
 struct Node
 {
     Node* left;
     Node* right;
+
+    uint32_t height;
 
     DataPair data;
 };
