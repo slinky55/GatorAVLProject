@@ -56,9 +56,8 @@ private:
     uint32_t Height(Node* _t);
     int GetBalance(Node* _t);
 
-    Node* RemoveInOrder(uint32_t n,
-                        uint32_t m,
-                        Node* _t);
+    void RemoveInOrder(uint32_t n,
+                        Node* _node);
     void InOrder(Node* _node);
     void PostOrder(Node* _node);
     void PreOrder(Node* _node);

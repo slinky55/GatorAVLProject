@@ -1,5 +1,7 @@
 #include "AVL.h"
 
+#include <stack>
+
 /*
  *  API
  */
@@ -27,7 +29,7 @@ void AVL::Search(const std::string &_name,
 
 void AVL::RemoveInOrder(uint32_t n)
 {
-    root = RemoveInOrder(n, 0, root);
+    RemoveInOrder(n, root);
 }
 
 void AVL::Height()
@@ -81,6 +83,10 @@ Node* AVL::Insert(const DataPair &_data, Node* _t)
             else
                 _t = DoubleLeftRotate(_t);
         }
+    } else if (_data.second == _t->data.second)
+    {
+        std::cout << "unsuccessful\n";
+        return _t;
     }
 
     _t->height = std::max(Height(_t->left), Height(_t->right)) + 1;
@@ -104,14 +110,14 @@ Node* AVL::Search(uint32_t _id,
     return nullptr;
 }
 void AVL::Search(const std::string &_name,
-            Node* _node,
-            std::vector<Node*> &_list)
+                Node* _node,
+                std::vector<Node*> &_list)
 {
     if (_node == nullptr)
         return;
-    Search(_name, _node->left, _list);
     if (_node->data.first == _name)
         _list.emplace_back(_node);
+    Search(_name, _node->left, _list);
     Search(_name, _node->right, _list);
 }
 Node* AVL::Remove(uint32_t _data,
@@ -124,7 +130,7 @@ Node* AVL::Remove(uint32_t _data,
         std::cout << "unsuccessful\n";
         return nullptr;
     }
-        // Searching for element
+
     else if (_data < _t->data.second)
         _t->left = Remove(_data,
                           _t->left);
@@ -132,17 +138,15 @@ Node* AVL::Remove(uint32_t _data,
         _t->right = Remove(_data,
                            _t->right);
 
-        // Element found
-        // With 2 children
-    else if (_t->left && _t->right) {
+    else if (_t->left && _t->right)
+    {
         temp = FindMin(_t->right);
         _t->data = temp->data;
         _t->right = Remove(_t->data.second,
                            _t->right);
-        std::cout << "successful\n";
     }
-        // With one or zero child
-    else {
+    else
+    {
         temp = _t;
         if (_t->left == nullptr)
             _t = _t->right;
@@ -151,30 +155,12 @@ Node* AVL::Remove(uint32_t _data,
         delete temp;
         std::cout << "successful\n";
     }
+
     if (!_t)
         return _t;
 
     _t->height = std::max(Height(_t->left), Height(_t->right)) + 1;
 
-    // If node is unbalanced
-    // If left node is deleted, right case
-    if (Height(_t->left) - Height(_t->right) == 2) {
-        // right right case
-        if (Height(_t->left->left) - Height(_t->left->right) == 1)
-            return SingleLeftRotate(_t);
-            // right left case
-        else
-            return DoubleLeftRotate(_t);
-    }
-        // If right node is deleted, left case
-    else if (Height(_t->right) - Height(_t->left) == 2) {
-        // left left case
-        if (Height(_t->right->right) - Height(_t->right->left) == 1)
-            return SingleRightRotate(_t);
-            // left right case
-        else
-            return DoubleRightRotate(_t);
-    }
     return _t;
 }
 void AVL::Empty(Node* _t)
@@ -186,7 +172,8 @@ void AVL::Empty(Node* _t)
     delete _t;
 }
 
-Node* AVL::SingleRightRotate(Node*& _t) {
+Node* AVL::SingleRightRotate(Node*& _t)
+{
     Node *u = _t->left;
     _t->left = u->right;
     u->right = _t;
@@ -194,7 +181,8 @@ Node* AVL::SingleRightRotate(Node*& _t) {
     u->height = std::max(Height(u->left), _t->height) + 1;
     return u;
 }
-Node* AVL::SingleLeftRotate(Node*& _t) {
+Node* AVL::SingleLeftRotate(Node*& _t)
+{
     Node* u = _t->right;
     _t->right = u->left;
     u->left = _t;
@@ -202,16 +190,19 @@ Node* AVL::SingleLeftRotate(Node*& _t) {
     u->height = std::max(Height(_t->right), _t->height) + 1;
     return u;
 }
-Node* AVL::DoubleLeftRotate(Node*& _t) {
+Node* AVL::DoubleLeftRotate(Node*& _t)
+{
     _t->right = SingleRightRotate(_t->right);
     return SingleLeftRotate(_t);
 }
-Node* AVL::DoubleRightRotate(Node*& _t) {
+Node* AVL::DoubleRightRotate(Node*& _t)
+{
     _t->left = SingleLeftRotate(_t->left);
     return SingleRightRotate(_t);
 }
 
-Node* AVL::FindMin(Node* _t) {
+Node* AVL::FindMin(Node* _t)
+{
     if (_t == nullptr)
         return nullptr;
     else if (_t->left == nullptr)
@@ -219,7 +210,8 @@ Node* AVL::FindMin(Node* _t) {
     else
         return FindMin(_t->left);
 }
-Node* AVL::FindMax(Node* _t) {
+Node* AVL::FindMax(Node* _t)
+{
     if (_t == nullptr)
         return nullptr;
     else if (_t->right == nullptr)
@@ -228,21 +220,53 @@ Node* AVL::FindMax(Node* _t) {
         return FindMax(_t->right);
 }
 
-uint32_t AVL::Height(Node* _t) {
+uint32_t AVL::Height(Node* _t)
+{
     return (!_t ? 0 : _t->height);
 }
-int32_t AVL::GetBalance(Node* _t) {
+int32_t AVL::GetBalance(Node* _t)
+{
     if (_t == nullptr)
         return 0;
     else
         return Height(_t->left) - Height(_t->right);
 }
 
-Node* AVL::RemoveInOrder(uint32_t n,
-                    uint32_t m,
-                    Node* _t) {
-    if (m == n)
-        return Remove(_t->data.second, _t);
+void AVL::RemoveInOrder(uint32_t n,
+                         Node* _node)
+{
+    std::stack<Node*> stack;
+
+    Node* curr = _node;
+    uint32_t count {0};
+
+    while (!stack.empty() || curr != nullptr)
+    {
+        if (curr != nullptr)
+        {
+            stack.push(curr);
+            curr = curr->left;
+        }
+        else {
+
+            curr = stack.top();
+            stack.pop();
+
+            if (count == n)
+                break;
+            count++;
+            curr = curr->right;
+        }
+    }
+
+    if (curr)
+    {
+        root = Remove(curr->data.second,
+                      root);
+        return;
+    }
+
+    std::cout << "unsuccessful\n";
 }
 void AVL::InOrder(Node* _node) {
     if (_node == nullptr)
