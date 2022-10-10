@@ -1,0 +1,3 @@
+cmake -B build-debug -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug
+cmake --build build-debug
+./build-debug/GatorAVLProject
